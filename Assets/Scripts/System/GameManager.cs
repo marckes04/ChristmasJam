@@ -10,9 +10,30 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject startingTransition;
     [SerializeField] private GameObject endTransition;
 
+     void Start()
+    {
+       startingTransition.SetActive(true);
+        Invoke("DisableStartingTransition", 1.0f);
+    }
 
-   public void GameStart()
+
+    private void DisableStartingTransition()
+    {
+        startingTransition.SetActive(false);
+    }
+
+    public void GameStart()
+    {
+        endTransition.SetActive(true);
+        Invoke("LoadLevel", 0.5f);
+    }
+
+
+    private void LoadLevel()
     {
         SceneManager.LoadScene("MainLevel");
     }
+
+
+  
 }
