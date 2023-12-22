@@ -42,12 +42,14 @@ public class PlayerMovement : MonoBehaviour
     {
         // Read the normalized move input from the input system
         moveInput = context.ReadValue<Vector2>().normalized;
+        charAnim.SetBool("Walk", true);
     }
 
     private void OnMoveCancelled(InputAction.CallbackContext context)
     {
         // Reset move input when the move action is cancelled
         moveInput = Vector2.zero;
+        charAnim.SetBool("Walk", false);
     }
 
     void Move()
@@ -56,6 +58,23 @@ public class PlayerMovement : MonoBehaviour
         Vector2 moveVelocity = moveDirection * moveSpeed;
 
         transform.Translate(moveVelocity * Time.deltaTime, Space.World);
+
+
+        if (moveDirection.x > 0)
+            changeDirection(5);
+
+        if (moveDirection.x<0)
+            changeDirection(-5);
     }
+
+
+    public void changeDirection(int direction)
+
+    {
+        Vector3 tempScale = transform.localScale;
+        tempScale.x = direction;
+        transform.localScale = tempScale;
+    }
+
 }
 
