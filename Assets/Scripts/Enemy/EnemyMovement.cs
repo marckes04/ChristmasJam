@@ -25,11 +25,26 @@ public class EnemyWithDetection : MonoBehaviour
     private bool playerDetected = false;
     private float shootCooldownTimer = 0f;
 
+    private Animator myAnim;
+
+
+
+    private void Awake()
+    {
+        myAnim = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        myAnim.SetBool("Walk", false);
+    }
+
     private void Update()
     {
         if (!playerDetected)
         {
             Patrol();
+            myAnim.SetBool("Walk", true);
         }
         else
         {
@@ -48,7 +63,7 @@ public class EnemyWithDetection : MonoBehaviour
             enemy.Translate(Vector3.right * patrolSpeed * Time.deltaTime);
         }
         else
-        {
+        {   
             enemy.Translate(Vector3.left * patrolSpeed * Time.deltaTime);
         }
 
@@ -56,12 +71,26 @@ public class EnemyWithDetection : MonoBehaviour
         if (movingRight && enemy.position.x >= rightPoint.position.x)
         {
             movingRight = false;
+            FlipEnemy(-8);
         }
         else if (!movingRight && enemy.position.x <= leftPoint.position.x)
         {
             movingRight = true;
+            FlipEnemy(8);
+
         }
     }
+
+
+    private void FlipEnemy(int scale)
+    {
+        Vector3 tempScale = transform.localScale;
+        tempScale.x = scale;
+        transform.localScale = tempScale;
+    }
+
+
+
 
     private void ChasePlayer()
     {
