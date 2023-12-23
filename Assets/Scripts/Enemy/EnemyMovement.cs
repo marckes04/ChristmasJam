@@ -20,6 +20,7 @@ public class EnemyWithDetection : MonoBehaviour
     [SerializeField] private GameObject snowballPrefab;
     [SerializeField] private Transform shootPoint;
     [SerializeField] private float shootCooldown = 2f;
+    [SerializeField] private float shootSpeed = 3f;
 
     private bool movingRight = true;
     private bool playerDetected = false;
@@ -49,7 +50,7 @@ public class EnemyWithDetection : MonoBehaviour
         else
         {
             ChasePlayer();
-            ShootSnowball();
+            AttackPlayer();
         }
 
         DetectPlayer();
@@ -63,7 +64,7 @@ public class EnemyWithDetection : MonoBehaviour
             enemy.Translate(Vector3.right * patrolSpeed * Time.deltaTime);
         }
         else
-        {   
+        {
             enemy.Translate(Vector3.left * patrolSpeed * Time.deltaTime);
         }
 
@@ -90,8 +91,6 @@ public class EnemyWithDetection : MonoBehaviour
     }
 
 
-
-
     private void ChasePlayer()
     {
         // Move towards the player at an increased speed
@@ -115,17 +114,13 @@ public class EnemyWithDetection : MonoBehaviour
         playerDetected = distanceToPlayer <= detectionDistance;
     }
 
-    private void ShootSnowball()
+    private void AttackPlayer()
     {
         if (shootCooldownTimer <= 0)
         {
-            // Calculate the direction to the player
-            Vector3 directionToPlayer = (GameObject.FindGameObjectWithTag("Player").transform.position - enemy.position).normalized;
-
-            // Instantiate a snowball and shoot it in the direction of the player
-            GameObject snowball = Instantiate(snowballPrefab, shootPoint.position, Quaternion.identity);
-            Rigidbody2D snowballRb = snowball.GetComponent<Rigidbody2D>();
-            snowballRb.velocity = directionToPlayer * patrolSpeed * 8; // Adjust speed as needed
+            // Play the attack animation and shoot snowball
+            myAnim.Play("Attack");
+            StartCoroutine("WaitToShoot");
 
             // Reset the cooldown timer
             shootCooldownTimer = shootCooldown;
@@ -136,4 +131,23 @@ public class EnemyWithDetection : MonoBehaviour
             shootCooldownTimer -= Time.deltaTime;
         }
     }
+
+    private void ShootSnowball()
+    {
+        // Calculate the direction to the player
+        Vector3 directionToPlayer = (GameObject.FindGameObjectWithTag("Player").transform.position - enemy.position).normalized;
+
+        // Instantiate a snowball and shoot it in the direction of the player
+        GameObject snowball = Instantiate(snowballPrefab, shootPoint.position, Quaternion.identity);
+        Rigidbody2D snowballRb = snowball.GetComponent<Rigidbody2D>();
+        snowballRb.velocity = directionToPlayer * patrolSpeed * shootSpeed; // Adjust speed as needed
+    }
+
+    IEnumerator WaitToShoot()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        ShootSnowball();
+    }
+
 }
