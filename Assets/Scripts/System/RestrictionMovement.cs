@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class RestrictionMovement : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public float minX = -5.15f;
+
+    public GameObject player;
+
+
+    private void FixedUpdate()
     {
-        
+        Vector3 temp = player.transform.position;// Variable to stablish the current position
+
+
+        if (temp.x < minX) // command to check if the player goes beyond maximum allowed place in Y axis
+            temp.x = minX;
+
+        player.transform.position = temp;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
