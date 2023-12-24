@@ -12,10 +12,13 @@ public class PlayerLife : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private Text lifeScoreText;
 
+
+
     private void Start()
     {
         currentLives = startingLives;
         UpdateLifeScoreUI();
+        
     }
 
     private void UpdateLifeScoreUI()
@@ -30,6 +33,7 @@ public class PlayerLife : MonoBehaviour
     public void LoseLife()
     {
         currentLives--;
+       
 
         if (currentLives <= 0)
         {
@@ -62,6 +66,11 @@ public class PlayerLife : MonoBehaviour
             // Destroy the bullet
             Destroy(other.gameObject);
         }
+
+        if (other.CompareTag("Death"))
+            LoseLife();
+
+
     }
 
     // This method should be called when the player gains an extra life

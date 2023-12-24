@@ -28,8 +28,11 @@ public class PlayerSpawn : MonoBehaviour
     }
 
 
-    private void Respawn()
+    void Respawn()
     {
         transform.position = startPos;
+        // decrease Life
+
+
     }
 }
